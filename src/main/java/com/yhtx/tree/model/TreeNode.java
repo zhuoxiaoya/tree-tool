@@ -18,5 +18,5 @@ public abstract class TreeNode {
      * 子节点列表
      */
     @Transient
-    private List<Object> childrenList = new ArrayList<>();
+    private transient List<Object> childrenList = new ArrayList<>();
 }
