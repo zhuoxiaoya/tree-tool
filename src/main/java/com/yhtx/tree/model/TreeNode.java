@@ -2,7 +2,6 @@ package com.yhtx.tree.model;
 
 import lombok.Data;
 
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +13,9 @@ import java.util.List;
  */
 @Data
 public abstract class TreeNode {
+
     /**
      * 子节点列表
      */
-    @Transient
     private transient List<Object> childrenList = new ArrayList<>();
 }
