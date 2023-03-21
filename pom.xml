@@ -8,7 +8,7 @@
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
-    <groupId>org.example</groupId>
+    <groupId>com.houlangmark</groupId>
     <artifactId>tree-tool</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -100,12 +100,12 @@
     </profiles>
 
     <distributionManagement>
-        <!--<repository>-->
-        <!--<id>sonatype-nexus-staging</id>-->
-        <!--&lt;!&ndash; 这个名称自己定义 &ndash;&gt;-->
-        <!--<name>staging</name>-->
-        <!--<url>https://s01.oss.sonatype.org/content/groups/staging/</url>-->
-        <!--</repository>-->
+<!--        <repository>-->
+<!--        <id>sonatype-nexus-staging</id>-->
+<!--        &lt;!&ndash; 这个名称自己定义 &ndash;&gt;-->
+<!--        <name>staging</name>-->
+<!--        <url>https://s01.oss.sonatype.org/content/groups/staging/</url>-->
+<!--        </repository>-->
         <repository>
             <id>sonatype-nexus-releases</id>
             <!-- 这个名称自己定义 -->
