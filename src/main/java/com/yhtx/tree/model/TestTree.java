@@ -1,15 +1,10 @@
 package com.yhtx.tree.model;
 
 import com.yhtx.tree.annotation.TreeField;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+/**
+ * 构建树结构测试类
+ */
 public class TestTree extends TreeNode{
 
     @TreeField(type = TreeField.FieldType.ID)
@@ -22,4 +17,36 @@ public class TestTree extends TreeNode{
     private Integer sort;
 
     private String name;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getPid() {
+        return pid;
+    }
+
+    public void setPid(int pid) {
+        this.pid = pid;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
