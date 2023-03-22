@@ -59,7 +59,8 @@ public class TestTree extends TreeNode{
 ### 1.以下调用为举例，使用TestTree类测试
 ``` java
  public static void main(String[] args) throws InterruptedException {
-        //构建几个符合树结构的树，必须有顶级节点和pid，pid可以不强制必须为0，有顶级节点则渲染为树，没有顶级节点则渲染为森林
+        //构建几个符合树结构的树，必须有顶级节点和pid，pid可以不强制必须为0。
+        //有顶级节点则渲染为树，没有顶级节点则渲染为森林
         List<TestTree> list = new ArrayList<>();
         list.add(new TestTree(6,1,2,"顶级节点"));
         list.add(new TestTree(1,0,1,"顶级节点"));
