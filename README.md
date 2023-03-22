@@ -24,7 +24,7 @@ tree-tool
 <dependency>
     <groupId>com.houlangmark</groupId>
     <artifactId>tree-tool</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
