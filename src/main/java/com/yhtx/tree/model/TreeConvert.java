@@ -18,6 +18,11 @@ import java.util.stream.Stream;
 public class TreeConvert<T> implements Serializable {
 
     /**
+     * 用于处理树节点子节点渲染后的移除操作，保持树的顶级节点
+     */
+    private static List result = new ArrayList<>();
+
+    /**
      * 转换树结构
      *
      * @param collection
@@ -30,8 +35,13 @@ public class TreeConvert<T> implements Serializable {
         }
         //检测排序对象是否包含指定的基本字段，并且返回map，用于构件树
         Map<TreeField.FieldType, Field> fieldMap = checkField(collection.get(0));
+        //先拷贝一份数据至最外部，用于处理子节点渲染后从外部集合移除
+        result.addAll(collection);
         //执行构件树操作
-        return create(collection, fieldMap);
+        List<T> tree = create(collection, fieldMap);
+        //执行完操作后需要将集合置空
+        result.clear();
+        return tree;
     }
 
     /**
@@ -71,15 +81,14 @@ public class TreeConvert<T> implements Serializable {
      * @return
      */
     private static <T> List<T> create(List<T> list,Map<TreeField.FieldType, Field> fieldMap) {
-        Stream<T> stream = list.stream()
-                .filter(item -> {
-                    String pid = ReflectUtils.getFieldValue(item, fieldMap.get(TreeField.FieldType.PARENT_ID).getName()).toString();
-                    return pid.equals("0");
-                })
-                .map(item -> {
-                    ReflectUtils.setFieldValue(item,"childrenList",getChildren(item, list,fieldMap));
-                    return item;
+        list.stream()
+                .forEach(item -> {
+                    //如果当前对象还存在静态量中就需要做递归处理
+                    if (result.contains(item)) {
+                        ReflectUtils.setFieldValue(item, "childrenList", getChildren(item, list, fieldMap));
+                    }
                 });
+        Stream<T> stream = result.stream();
         //判断是否需要排序
         if(fieldMap.containsKey(TreeField.FieldType.SORT)){
             //流使用一次后就会失效，此处相当于从新赋值一次，变成一个新的流
@@ -101,16 +110,20 @@ public class TreeConvert<T> implements Serializable {
      * @return
      */
     private static <T> List<T> getChildren(T model, List<T> list,Map<TreeField.FieldType, Field> fieldMap) {
-        Stream<T> stream = list.stream()
+        //先把满足自己叶子条件的集合先过滤出来
+        List<T> childrenList = list.stream()
                 .filter(item -> {
                     Object pid = ReflectUtils.getFieldValue(item, fieldMap.get(TreeField.FieldType.PARENT_ID).getName());
                     Object id = ReflectUtils.getFieldValue(model, fieldMap.get(TreeField.FieldType.ID).getName());
                     return pid.equals(id);
-                })
-                .map(item -> {
-                    ReflectUtils.setFieldValue(item,"childrenList",getChildren(item,list,fieldMap));
-                    return item;
-                });
+                }).collect(Collectors.toList());
+        //删除所有是子节点的节点数据
+        result.removeAll(childrenList);
+        //此处做处理把所有叶子节点也要全部循环处理一次把他们的叶子节点也处理了
+        Stream<T> stream = childrenList.stream().map(item -> {
+            ReflectUtils.setFieldValue(item, "childrenList", getChildren(item, list, fieldMap));
+            return item;
+        });
         //判断是否需要排序
         if(fieldMap.containsKey(TreeField.FieldType.SORT)){
             stream = stream.sorted(
@@ -119,7 +132,7 @@ public class TreeConvert<T> implements Serializable {
                             //方法内部接收一个Function用于判断大小顺序，此处就返回指定的字段的值即可
                             getFunction(fieldMap.get(TreeField.FieldType.SORT))));
         }
-        return  stream.collect(Collectors.toList());
+        return stream.collect(Collectors.toList());
     }
 
     /**
