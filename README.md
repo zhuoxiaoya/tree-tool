@@ -24,12 +24,28 @@ tree-tool
 <dependency>
     <groupId>com.houlangmark</groupId>
     <artifactId>tree-tool</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
 ## 三. 使用说明
-1.只需要在需要构建的集合对象上继承核心树节点对象，在集合内的对象上打上标记主节点和上级节点的注解，即可使用静态方法构建树集合。举个栗子🌰如下：
+1.核心顶级抽象类，需要继承此类，如果没有此类，无法利用反射进行设置子节点值
+``` java
+/**
+ * 树节点
+ * <p>
+ * 只增加children属性，不侵入多余字段（如排序、计数等）
+ * 配合TreeConvert使用
+ */
+public abstract class TreeNode {
+
+    /**
+     * 子节点列表
+     */
+    private transient List<Object> childrenList = new ArrayList<>();
+}
+```
+2.只需要在需要构建的集合对象上继承核心树节点对象，在集合内的对象上打上标记主节点和上级节点的注解，即可使用静态方法构建树集合。举个栗子🌰如下：
 ``` java
 public class TestTree extends TreeNode{
 
@@ -73,6 +89,103 @@ public class TestTree extends TreeNode{
         System.out.println(convert);
     }
 ``` 
+### 2.测试处理前集合数据样式为以下json
+``` json
+[
+    {
+        "childrenList": [],
+        "id": 6,
+        "pid": 1,
+        "sort": 2,
+        "name": "节点6"
+    },
+    {
+        "childrenList": [],
+        "id": 1,
+        "pid": 0,
+        "sort": 1,
+        "name": "节点1"
+    },
+    {
+        "childrenList": [],
+        "id": 4,
+        "pid": 2,
+        "sort": 1,
+        "name": "节点4"
+    },
+    {
+        "childrenList": [],
+        "id": 2,
+        "pid": 0,
+        "sort": 2,
+        "name": "节点2"
+    },
+    {
+        "childrenList": [],
+        "id": 5,
+        "pid": 1,
+        "sort": 2,
+        "name": "节点5"
+    },
+    {
+        "childrenList": [],
+        "id": 3,
+        "pid": 1,
+        "sort": 1,
+        "name": "节点3"
+    }
+]
+``` 
+### 3.利用工具类
+``` json
+[
+    {
+        "childrenList": [
+            {
+                "childrenList": [],
+                "id": 3,
+                "pid": 1,
+                "sort": 1,
+                "name": "节点3"
+            },
+            {
+                "childrenList": [],
+                "id": 6,
+                "pid": 1,
+                "sort": 2,
+                "name": "节点6"
+            },
+            {
+                "childrenList": [],
+                "id": 5,
+                "pid": 1,
+                "sort": 2,
+                "name": "节点5"
+            }
+        ],
+        "id": 1,
+        "pid": 0,
+        "sort": 1,
+        "name": "节点1"
+    },
+    {
+        "childrenList": [
+            {
+                "childrenList": [],
+                "id": 4,
+                "pid": 2,
+                "sort": 1,
+                "name": "节点4"
+            }
+        ],
+        "id": 2,
+        "pid": 0,
+        "sort": 2,
+        "name": "节点2"
+    }
+]
+``` 
+
 
 #### 参与贡献
 
