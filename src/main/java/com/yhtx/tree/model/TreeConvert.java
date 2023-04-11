@@ -29,6 +29,8 @@ public class TreeConvert<T> implements Serializable {
      * @return
      */
     public static <T> List<T> convert(List<T> collection) {
+        //执行操作前需要先把数据清理了
+        result.clear();
         //如果集合为空 就直接返回空集合
         if(Objects.isNull(collection) || collection.isEmpty()){
             return Arrays.asList();
